@@ -50,11 +50,6 @@ If you're on Gmail, `SMTP_PASSWORD` must be an **App Password**, not your normal
 
 **Recommended first run order:** `init-db` → `list` → `check` → `sync`.
 
-**Production scheduling:** use cron instead of `schedule`, since an in-process loop dies if the machine restarts:
-```
-0 3 * * * /usr/bin/python3 /path/to/main.py sync >> /path/to/logs/cron.log 2>&1
-```
-
 ---
 
 ## Project structure
@@ -75,7 +70,6 @@ If you're on Gmail, `SMTP_PASSWORD` must be an **App Password**, not your normal
 | `requirements.txt` | Python dependencies |
 | `downloads/` | Raw zip files + extracted contents (created at runtime) |
 | `logs/` | `pipeline.log` (created at runtime) |
-| `docs/screenshots/` | Reference screenshots referenced below |
 
 ---
 
@@ -98,7 +92,7 @@ The diagram above walks through the ETL flow: both CMS sources get scraped indep
 
 Ignored columns: `STATE`, `RURAL IND`, `LAB CB LOCALITY`, `RURAL IND2`, `PLUS 4 FLAG`, `PART B DRUG INDICATOR`.
 
-![Zip mapping table](docs/screenshots/zip_mapping_table.png)
+![Zip mapping table](zip_mapping_table.png)
 
 ### `conversion_factor` — from Source 2 (Anesthesiologists Information Center)
 
@@ -111,7 +105,7 @@ Ignored columns: `STATE`, `RURAL IND`, `LAB CB LOCALITY`, `RURAL IND2`, `PLUS 4 
 
 Ignored columns: `Work GPCI`, `PE GPCI`, `MP GPCI`, `Locality Name`. If both a "Non-Qualifying" and "Qualifying" APM CF column exist, only the Non-Qualifying one is used.
 
-![Conversion factor table](docs/screenshots/conversion_factor_table.png)
+![Conversion factor table](conversion_factor_table.png)
 
 ### `cpt_base_units` — from Source 2 (Anesthesiologists Information Center)
 
@@ -128,7 +122,7 @@ Ignored columns: `Work GPCI`, `PE GPCI`, `MP GPCI`, `Locality Name`. If both a "
 
 Sent after every `sync` run — whether or not new data was found — so there's always a confirmation the run happened. Subject line changes depending on outcome (`CMS Anesthesia Data Updated` vs `CMS Anesthesia Data - No New Data`).
 
-![Email notification](docs/screenshots/email_notification.png)
+![Email notification](email_notification.png)
 
 ---
 
@@ -146,5 +140,3 @@ Sent after every `sync` run — whether or not new data was found — so there's
 | SQLite (`sqlite3`, built-in) | Local database storage |
 | `smtplib` (built-in) | Sends the notification email |
 | `zipfile` (built-in) | Zip extraction |
-
-
